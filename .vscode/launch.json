@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "java",
+        "name": "Run JavaFX App",
+        "request": "launch",
+        "mainClass": "App",
+        "vmArgs": "--module-path \"/opt/javafx-sdk/lib\" --add-modules javafx.controls,javafx.fxml -cp bin:lib/mysql-connector-j-9.2.0.jar"
+      }
+    ]
+  }
+  

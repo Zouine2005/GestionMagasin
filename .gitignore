@@ -1,0 +1,13 @@
+# Fichiers compilés
+/bin
+*.class
+
+# Fichiers système
+*.log
+.DS_Store
+
+# VS Code backup files
+.vscode/*.code-workspace
+
+# Fichiers sensibles (optionnel)
+*.db
