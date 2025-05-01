@@ -1,13 +1,17 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "type": "java",
-        "name": "Run JavaFX App",
-        "request": "launch",
-        "mainClass": "App",
-        "vmArgs": "--module-path \"/opt/javafx-sdk/lib\" --add-modules javafx.controls,javafx.fxml -cp bin:lib/mysql-connector-j-9.2.0.jar"
-      }
-    ]
-  }
-  
+  "type": "java",
+  "name": "Lancer Main.java",
+  "request": "launch",
+  "mainClass": "Main",
+  "vmArgs": "--module-path /opt/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml",
+  "projectName": "GestionMagasin",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Main",
+      "request": "launch",
+      "mainClass": "Main",
+      "projectName": "GestionMagasin_3cf9d1e1"
+    }
+  ]
+}
