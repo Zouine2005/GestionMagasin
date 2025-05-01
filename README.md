@@ -1,18 +1,54 @@
-## Getting Started
+# 🛒 GestionMagasin - Application JavaFX + MySQL
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+**GestionMagasin** est une application de bureau conçue pour simplifier la gestion des produits électroniques dans un magasin. Elle utilise **JavaFX** pour une interface utilisateur moderne, **MySQL** pour une gestion robuste des données, et est développée dans **Visual Studio Code**.
 
-## Folder Structure
+---
 
-The workspace contains two folders by default, where:
+## ⚙️ Fonctionnalités principales
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+### 🔐 Authentification sécurisée
+- Connexion avec identifiants pour protéger l'accès administrateur.
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+### 🛒 Gestion des produits
+- Ajouter, modifier ou supprimer des produits (nom, description, prix, quantité, image).
+- Affichage des produits dans un tableau interactif avec support des images.
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+### 🖼️ Gestion des images
+- Association d'images locales à chaque produit pour une meilleure visualisation.
 
-## Dependency Management
+### 📊 Tableau de bord interactif
+- Recherche, tri et visualisation des produits en temps réel.
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+---
+
+## 🧱 Architecture MVC
+L'application suit le modèle **MVC (Model-View-Controller)** pour une séparation claire des responsabilités, facilitant la maintenance et l'évolutivité.
+
+---
+
+## 🛠️ Technologies utilisées
+- **JavaFX** : Interface utilisateur.
+- **MySQL** : Base de données relationnelle.
+- **Visual Studio Code** : Environnement de développement.
+
+---
+
+## 🚀 Installation et exécution
+1. Clonez le dépôt :  
+    ```bash
+    git clone https://github.com/votre-repo/GestionMagasin.git
+    ```
+2. Configurez la base de données MySQL en important le fichier SQL fourni.
+3. Lancez l'application depuis votre IDE.
+
+---
+
+## 📄 Licence
+Ce projet est sous licence [MIT](LICENSE).
+
+---
+
+## 📧 Contact
+Pour toute question ou suggestion, veuillez contacter :  
+**GitHub** : [Zouine2005](https://github.com/Zouine2005)
+
