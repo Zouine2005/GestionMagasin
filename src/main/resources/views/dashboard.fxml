@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="main.controllers.ProductController">
+    <VBox>
+        <TextField fx:id="searchField" promptText="Rechercher un produit..." />
+        <TableView fx:id="productTable">
+            <columns>
+                <TableColumn fx:id="nameColumn" text="Nom" />
+                <TableColumn fx:id="priceColumn" text="Prix" />
+                <TableColumn fx:id="quantityColumn" text="Quantité" />
+                <TableColumn fx:id="imageColumn" text="Image" />
+            </columns>
+        </TableView>
+        <HBox>
+            <Button text="Ajouter" onAction="#showAddProductForm" />
+            <Button text="Modifier" onAction="#showEditProductForm" />
+            <Button text="Supprimer" onAction="#deleteProduct" />
+        </HBox>
+    </VBox>
+</AnchorPane>
