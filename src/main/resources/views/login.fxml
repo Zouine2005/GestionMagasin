@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="main.controllers.LoginController">
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="Connexion Administrateur" />
+        <TextField fx:id="usernameField" promptText="Nom d'utilisateur" />
+        <PasswordField fx:id="passwordField" promptText="Mot de passe" />
+        <Button text="Se connecter" onAction="#handleLogin" />
+    </VBox>
+</AnchorPane>
