@@ -3,10 +3,8 @@
       "lib/**/*.jar"
     ],
     "java.project.sourcePaths": [
+      "src/main/resources",
       "src/main/java"
-    ],
-    "java.project.resourcePaths": [
-      "src/main/resources"
     ],
     "java.project.outputPath": "bin"
   }
