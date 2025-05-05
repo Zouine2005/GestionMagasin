@@ -3,7 +3,7 @@
   "name": "Lancer Main.java",
   "request": "launch",
   "mainClass": "Main",
-  "vmArgs": "--module-path /opt/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics",
+  "vmArgs": "--module-path /opt/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base",
   "projectName": "GestionMagasin",
   "configurations": [
     {
