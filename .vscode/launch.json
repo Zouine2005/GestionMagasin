@@ -1,8 +1,8 @@
 {
   "type": "java",
-  "name": "Lancer Main.java",
+  "name": "Lancer Main",
   "request": "launch",
-  "mainClass": "Main",
+  "mainClass": "main.java.Main",
   "vmArgs": "--module-path /opt/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base",
   "projectName": "GestionMagasin",
   "configurations": [
@@ -11,6 +11,13 @@
       "name": "Main",
       "request": "launch",
       "mainClass": "Main",
+      "projectName": "GestionMagasin_3cf9d1e1"
+    },
+    {
+      "type": "java",
+      "name": "Main",
+      "request": "launch",
+      "mainClass": "main.java.Main",
       "projectName": "GestionMagasin_3cf9d1e1"
     }
   ]
