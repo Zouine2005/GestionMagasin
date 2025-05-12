@@ -3,7 +3,7 @@
   "name": "Lancer Main.java",
   "request": "launch",
   "mainClass": "Main",
-  "vmArgs": "--module-path /opt/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base",
+  "vmArgs": "--module-path /opt/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base --class-path lib/mysql-connector-j-9.2.0.jar",
   "projectName": "GestionMagasin",
   "configurations": [
     {
