@@ -11,3 +11,6 @@
 
 # Fichiers sensibles (optionnel)
 *.db
+
+#Folder Lib
+lib/
