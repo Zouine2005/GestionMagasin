@@ -44,7 +44,7 @@ L'application suit le modèle **MVC (Model-View-Controller)** pour une séparati
 ---
 
 ## 📄 Licence
-Ce projet est sous licence [MIT](LICENSE).
+Ce projet est sous licence [MIT](License).
 
 ---
 
