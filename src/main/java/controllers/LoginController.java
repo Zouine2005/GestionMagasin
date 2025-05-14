@@ -29,6 +29,16 @@ public class LoginController {
                 // Rediriger vers le dashboard
                 System.out.println("Connexion réussie !");
                 // Charger dashboard.fxml ici
+                javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/views/dashboard.fxml"));
+                javafx.scene.Parent root = loader.load();
+                javafx.stage.Stage stage = new javafx.stage.Stage();
+                stage.setTitle("Dashboard");
+                stage.setScene(new javafx.scene.Scene(root));
+                stage.show();
+
+                // Fermer la fenêtre de connexion
+                javafx.stage.Stage loginStage = (javafx.stage.Stage) usernameField.getScene().getWindow();
+                loginStage.close();
             } else {
                 System.out.println("Identifiants incorrects.");
             }
