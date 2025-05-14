@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.ProductController">
-    <VBox>
-        <TextField fx:id="searchField" promptText="Rechercher un produit..." />
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ProductController">
+    <VBox spacing="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        
+        <HBox spacing="10">
+            <Label text="Rechercher:" />
+            <TextField fx:id="searchField" />
+        </HBox>
+
         <TableView fx:id="productTable">
             <columns>
-                <TableColumn fx:id="nameColumn" text="Nom" />
-                <TableColumn fx:id="priceColumn" text="Prix" />
-                <TableColumn fx:id="quantityColumn" text="Quantité" />
-                <TableColumn fx:id="imageColumn" text="Image" />
+                <TableColumn text="Nom" fx:id="nameColumn" minWidth="150"/>
+                <TableColumn text="Description" fx:id="descriptionColumn" minWidth="200"/>
+                <TableColumn text="Prix" fx:id="priceColumn" minWidth="80"/>
+                <TableColumn text="Quantité" fx:id="quantityColumn" minWidth="80"/>
+                <TableColumn text="Image" fx:id="imageColumn" minWidth="150"/>
             </columns>
         </TableView>
-        <HBox>
-            <Button text="Ajouter" onAction="#showAddProductForm" />
-            <Button text="Modifier" onAction="#showEditProductForm" />
-            <Button text="Supprimer" onAction="#deleteProduct" />
+
+        <HBox spacing="10">
+            <Button text="Ajouter" onAction="#showAddProductForm" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+            <Button text="Supprimer" onAction="#deleteProduct" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
         </HBox>
     </VBox>
 </AnchorPane>
