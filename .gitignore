@@ -1,16 +1,16 @@
-# Fichiers compilés
+# === FICHIERS COMPILÉS ===
 /bin
 *.class
 
-# Fichiers système
+# === FICHIERS SYSTÈME ===
 *.log
 .DS_Store
 
-# VS Code backup files
+# === FICHIERS VS CODE ===
 .vscode/*.code-workspace
 
-# Fichiers sensibles (optionnel)
+# === FICHIERS SENSIBLES (OPTIONNEL) ===
 *.db
 
-#Folder Lib
+# === DOSSIER LIB (EX: javafx-sdk) ===
 lib/
