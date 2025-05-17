@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" spacing="10">
+<VBox xmlns:fx="http://javafx.com/fxml/2"  fx:controller="controllers.AddProductController">
     <Label text="Nouveau Produit" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
     
     <GridPane hgap="10" vgap="10">
