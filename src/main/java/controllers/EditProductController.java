@@ -9,76 +9,108 @@ import models.Product;
 import java.io.File;
 
 public class EditProductController {
+    // Champs FXML
     @FXML private TextField nameField;
     @FXML private TextField descriptionField;
     @FXML private TextField priceField;
     @FXML private TextField quantityField;
     @FXML private TextField imagePathField;
     
+    // Données du produit
     private Product productToEdit;
     private ProductController mainController;
+    private Stage currentStage;
 
-    public void setProductToEdit(Product product) {
+    // Méthode d'initialisation sécurisée
+    public void initializeData(Product product, ProductController mainController, Stage stage) {
+        if (product == null || mainController == null || stage == null) {
+            throw new IllegalArgumentException("Les paramètres ne peuvent pas être null");
+        }
+        
         this.productToEdit = product;
-        // Remplir les champs avec les données du produit
-        nameField.setText(product.getName());
-        descriptionField.setText(product.getDescription());
-        priceField.setText(String.valueOf(product.getPrice()));
-        quantityField.setText(String.valueOf(product.getQuantity()));
-        imagePathField.setText(product.getImagePath());
+        this.mainController = mainController;
+        this.currentStage = stage;
+        
+        // Vérification que les champs FXML sont injectés
+        if (nameField == null || descriptionField == null || priceField == null || 
+            quantityField == null || imagePathField == null) {
+            throw new IllegalStateException("Les champs FXML n'ont pas été correctement initialisés");
+        }
+        
+        // Remplissage des champs
+        populateFields();
     }
 
-    public void setMainController(ProductController mainController) {
-        this.mainController = mainController;
+    private void populateFields() {
+        nameField.setText(productToEdit.getName());
+        descriptionField.setText(productToEdit.getDescription());
+        priceField.setText(String.format("%.2f", productToEdit.getPrice()));
+        quantityField.setText(String.valueOf(productToEdit.getQuantity()));
+        imagePathField.setText(productToEdit.getImagePath() != null ? productToEdit.getImagePath() : "");
     }
 
     @FXML
     private void handleSave() {
         try {
-            // Validation des données
-            String name = nameField.getText().trim();
-            String description = descriptionField.getText().trim();
-            double price = Double.parseDouble(priceField.getText().trim());
-            int quantity = Integer.parseInt(quantityField.getText().trim());
-            String imagePath = imagePathField.getText().trim();
-
-            if (name.isEmpty()) {
-                mainController.showAlert("Erreur", "Le nom est obligatoire");
+            if (!validateInputs()) {
                 return;
             }
 
-            // Mise à jour du produit
-            productToEdit.setName(name);
-            productToEdit.setDescription(description);
-            productToEdit.setPrice(price);
-            productToEdit.setQuantity(quantity);
-            productToEdit.setImagePath(imagePath);
-
-            // Sauvegarde en base de données
+            updateProductFromFields();
+            
             if (mainController.updateProductInDatabase(productToEdit)) {
                 mainController.refreshTable();
                 closeWindow();
-                mainController.showAlert("Succès", "Produit mis à jour", Alert.AlertType.INFORMATION);
+                showSuccessAlert();
             }
         } catch (NumberFormatException e) {
-            mainController.showAlert("Erreur", "Veuillez entrer des valeurs numériques valides pour le prix et la quantité");
+            showErrorAlert("Format invalide", "Veuillez entrer des valeurs numériques valides");
         } catch (Exception e) {
-            mainController.showAlert("Erreur", "Erreur lors de la mise à jour: " + e.getMessage());
+            showErrorAlert("Erreur", "Échec de la mise à jour: " + e.getMessage());
         }
+    }
+
+    private boolean validateInputs() {
+        if (nameField.getText().trim().isEmpty()) {
+            showErrorAlert("Erreur", "Le nom du produit est obligatoire");
+            return false;
+        }
+        
+        try {
+            Double.parseDouble(priceField.getText().trim());
+            Integer.parseInt(quantityField.getText().trim());
+            return true;
+        } catch (NumberFormatException e) {
+            showErrorAlert("Erreur", "Prix et quantité doivent être des nombres valides");
+            return false;
+        }
+    }
+
+    private void updateProductFromFields() {
+        productToEdit.setName(nameField.getText().trim());
+        productToEdit.setDescription(descriptionField.getText().trim());
+        productToEdit.setPrice(Double.parseDouble(priceField.getText().trim()));
+        productToEdit.setQuantity(Integer.parseInt(quantityField.getText().trim()));
+        productToEdit.setImagePath(imagePathField.getText().trim());
     }
 
     @FXML
     private void handleBrowseImage() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Sélectionner une image");
-        fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"),
-            new FileChooser.ExtensionFilter("Tous fichiers", "*.*")
-        );
-        File file = fileChooser.showOpenDialog(imagePathField.getScene().getWindow());
+        configureFileChooser(fileChooser);
+        
+        File file = fileChooser.showOpenDialog(currentStage);
         if (file != null) {
             imagePathField.setText(file.getAbsolutePath());
         }
+    }
+
+    private void configureFileChooser(FileChooser fileChooser) {
+        fileChooser.setTitle("Sélectionner une image");
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif"),
+            new FileChooser.ExtensionFilter("Tous fichiers", "*.*")
+        );
     }
 
     @FXML
@@ -87,6 +119,26 @@ public class EditProductController {
     }
 
     private void closeWindow() {
-        ((Stage) nameField.getScene().getWindow()).close();
+        if (currentStage != null) {
+            currentStage.close();
+        }
+    }
+
+    private void showErrorAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.initOwner(currentStage);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showSuccessAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initOwner(currentStage);
+        alert.setTitle("Succès");
+        alert.setHeaderText(null);
+        alert.setContentText("Produit mis à jour avec succès");
+        alert.showAndWait();
     }
 }
