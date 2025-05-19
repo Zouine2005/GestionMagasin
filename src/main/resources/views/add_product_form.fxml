@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 
 <VBox xmlns:fx="http://javafx.com/fxml/1" 
-      spacing="10" padding="15">
+      spacing="10">
     <Label text="Nouveau Produit" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
     
     <GridPane hgap="10" vgap="10">
@@ -30,7 +30,7 @@
     
     <HBox spacing="10">
         <Button text="Ajouter" onAction="#addProduct" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-        <Button text="Annuler" onAction="#cancelAddProduct" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+        <Button text="Annuler" onAction="#cancel" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
     </HBox>
     
     <Label text="* Champs obligatoires" style="-fx-font-style: italic; -fx-text-fill: gray;"/>
