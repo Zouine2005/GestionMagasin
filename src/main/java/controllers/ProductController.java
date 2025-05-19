@@ -22,6 +22,7 @@ public class ProductController {
     // Composants de la vue principale
     @FXML private TableView<Product> productTable;
     @FXML private TableColumn<Product, String> nameColumn;
+    @FXML private TableColumn<Product, String> descriptionColumn;
     @FXML private TableColumn<Product, Double> priceColumn;
     @FXML private TableColumn<Product, Integer> quantityColumn;
     @FXML private TableColumn<Product, String> imageColumn;
@@ -38,6 +39,7 @@ public class ProductController {
 
     private void configureTableColumns() {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         imageColumn.setCellValueFactory(new PropertyValueFactory<>("imagePath"));
