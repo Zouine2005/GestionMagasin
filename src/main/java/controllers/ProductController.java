@@ -136,4 +136,52 @@ public class ProductController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    // Ajoutez cette méthode dans ProductController
+   @FXML
+private void showEditProductForm() {
+    Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
+    if (selectedProduct == null) {
+        showAlert("Erreur", "Veuillez sélectionner un produit");
+        return;
+    }
+
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/edit_product_form.fxml"));
+        Parent root = loader.load();
+        
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        
+        EditProductController controller = loader.getController();
+        controller.initializeData(selectedProduct, this, stage);
+        
+        stage.setTitle("Modifier Produit");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+        
+        refreshTable();
+    } catch (IOException e) {
+        showAlert("Erreur", "Impossible d'ouvrir l'éditeur: " + e.getMessage());
+    }
+    }
+    
+// Ajoutez cette méthode pour mettre à jour le produit en base de données
+    public boolean updateProductInDatabase(Product product) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "UPDATE product SET name = ?, description = ?, price = ?, quantity = ?, image_path = ? WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, product.getName());
+            stmt.setString(2, product.getDescription());
+            stmt.setDouble(3, product.getPrice());
+            stmt.setInt(4, product.getQuantity());
+            stmt.setString(5, product.getImagePath());
+            stmt.setInt(6, product.getId());
+            
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            showAlert("Erreur", "Erreur base de données: " + e.getMessage());
+            return false;
+        }
+    }
 }
