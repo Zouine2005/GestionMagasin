@@ -185,5 +185,27 @@ private void showEditProductForm() {
         }
     }
 
-    
+    @FXML
+private void handleLogout() {
+    try {
+        // Fermer la fenêtre actuelle
+        Stage currentStage = (Stage) productTable.getScene().getWindow();
+        currentStage.close();
+        
+        // Charger la vue de login
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
+        Parent root = loader.load();
+        
+        // Créer une nouvelle scène
+        Stage loginStage = new Stage();
+        loginStage.setTitle("Connexion");
+        loginStage.setScene(new Scene(root));
+        loginStage.show();
+        
+    } catch (IOException e) {
+        showAlert("Erreur", "Impossible de charger l'écran de connexion: " + e.getMessage());
+    }
+}
+
+
 }
