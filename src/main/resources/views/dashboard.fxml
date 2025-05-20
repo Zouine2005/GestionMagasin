@@ -8,6 +8,10 @@
     <VBox spacing="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
           AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
         
+         <HBox spacing="10"  alignment="CENTER_RIGHT">
+            <Button text="Déconnexion" onAction="#handleLogout" 
+                   style="-fx-background-color: #FF5722; -fx-text-fill: white;"/>
+        </HBox>
         <HBox spacing="10">
             <Label text="Rechercher:" />
             <TextField fx:id="searchField" />
