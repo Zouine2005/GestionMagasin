@@ -186,26 +186,109 @@ private void showEditProductForm() {
     }
 
     @FXML
-private void handleLogout() {
-    try {
-        // Fermer la fenêtre actuelle
-        Stage currentStage = (Stage) productTable.getScene().getWindow();
-        currentStage.close();
-        
-        // Charger la vue de login
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
-        Parent root = loader.load();
-        
-        // Créer une nouvelle scène
-        Stage loginStage = new Stage();
-        loginStage.setTitle("Connexion");
-        loginStage.setScene(new Scene(root));
-        loginStage.show();
-        
-    } catch (IOException e) {
-        showAlert("Erreur", "Impossible de charger l'écran de connexion: " + e.getMessage());
+    private void handleLogout() {
+        try {
+            // Fermer la fenêtre actuelle
+            Stage currentStage = (Stage) productTable.getScene().getWindow();
+            currentStage.close();
+            
+            // Charger la vue de login
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
+            Parent root = loader.load();
+            
+            // Créer une nouvelle scène
+            Stage loginStage = new Stage();
+            loginStage.setTitle("Connexion");
+            loginStage.setScene(new Scene(root));
+            loginStage.show();
+            
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible de charger l'écran de connexion: " + e.getMessage());
+        }
     }
-}
+
+
+    // Déclarez une liste filtrée
+     private FilteredList<Product> filteredProducts;
+     
+     @FXML
+     public void initialize() {
+         // Configuration des colonnes...
+         configureTableColumns();
+         
+         // Initialisation avec la liste complète
+         loadProducts();
+         
+         // Configuration de la recherche
+         setupSearchFunctionality();
+     }
+     
+     private void setupSearchFunctionality() {
+         // Créez une FilteredList wrapper autour de votre ObservableList
+         filteredProducts = new FilteredList<>(productList, p -> true);
+         
+         // Liez la TableView à la FilteredList
+         productTable.setItems(filteredProducts);
+         
+         // Écoutez les changements dans le champ de recherche
+         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+             filterProducts(newValue);
+         });
+     }
+     
+     @FXML
+     private void handleSearch() {
+         filterProducts(searchField.getText());
+     }
+     
+     @FXML
+     private void handleResetSearch() {
+         searchField.clear();
+         filterProducts("");
+     }
+     
+     private void filterProducts(String searchText) {
+         filteredProducts.setPredicate(product -> {
+             // Si le champ de recherche est vide, affichez tous les produits
+             if (searchText == null || searchText.isEmpty()) {
+                 return true;
+             }
+             
+             // Comparez le nom du produit avec le texte de recherche (insensible à la casse)
+             String lowerCaseFilter = searchText.toLowerCase();
+             
+             if (product.getName().toLowerCase().contains(lowerCaseFilter)) {
+                 return true; // Correspondance trouvée
+             }
+             return false; // Aucune correspondance
+         });
+     }
+     
+     public void loadProducts() {
+         productList.clear();
+         try (Connection conn = DatabaseConnection.getConnection()) {
+             String query = "SELECT * FROM product";
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery();
+     
+             while (rs.next()) {
+                 productList.add(new Product(
+                     rs.getInt("id"),
+                     rs.getString("name"),
+                     rs.getString("description"),
+                     rs.getDouble("price"),
+                     rs.getInt("quantity"),
+                     rs.getString("image_path")
+                 ));
+             }
+             
+             // Après le chargement, appliquez le filtre actuel
+             filterProducts(searchField.getText());
+             
+         } catch (Exception e) {
+             showAlert("Erreur", "Erreur lors du chargement des produits: " + e.getMessage());
+         }
+     }
 
 
 }
