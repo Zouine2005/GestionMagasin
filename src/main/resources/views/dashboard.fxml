@@ -13,8 +13,10 @@
                    style="-fx-background-color: #FF5722; -fx-text-fill: white;"/>
         </HBox>
         <HBox spacing="10">
-            <Label text="Rechercher:" />
-            <TextField fx:id="searchField" />
+             <Label text="Rechercher un produit:"/>
+             <TextField fx:id="searchField" promptText="Entrez un nom de produit"/>
+             <Button text="Rechercher" onAction="#handleSearch"/>
+             <Button text="Réinitialiser" onAction="#handleResetSearch" style="-fx-background-color: #9E9E9E; -fx-text-fill: white;"/>
         </HBox>
 
         <TableView fx:id="productTable">
