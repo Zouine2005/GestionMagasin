@@ -4,6 +4,7 @@ import models.Product;
 import models.DatabaseConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,11 +30,17 @@ public class ProductController {
     @FXML private TextField searchField;
 
     private ObservableList<Product> productList = FXCollections.observableArrayList();
+    private FilteredList<Product> filteredProducts;
 
     @FXML
     public void initialize() {
         // Configuration des colonnes de la table
         configureTableColumns();
+        
+        // Configuration de la recherche
+        setupSearchFunctionality();
+        
+        // Chargement des produits
         loadProducts();
     }
 
@@ -43,6 +50,37 @@ public class ProductController {
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         imageColumn.setCellValueFactory(new PropertyValueFactory<>("imagePath"));
+    }
+
+    private void setupSearchFunctionality() {
+        filteredProducts = new FilteredList<>(productList, p -> true);
+        productTable.setItems(filteredProducts);
+        
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterProducts(newValue);
+        });
+    }
+
+    private void filterProducts(String searchText) {
+        filteredProducts.setPredicate(product -> {
+            if (searchText == null || searchText.isEmpty()) {
+                return true;
+            }
+            
+            String lowerCaseFilter = searchText.toLowerCase();
+            return product.getName().toLowerCase().contains(lowerCaseFilter);
+        });
+    }
+
+    @FXML
+    private void handleSearch() {
+        filterProducts(searchField.getText());
+    }
+
+    @FXML
+    private void handleResetSearch() {
+        searchField.clear();
+        filterProducts("");
     }
 
     public void loadProducts() {
@@ -62,7 +100,6 @@ public class ProductController {
                     rs.getString("image_path")
                 ));
             }
-            productTable.setItems(productList);
         } catch (Exception e) {
             showAlert("Erreur", "Erreur lors du chargement des produits: " + e.getMessage());
         }
@@ -72,15 +109,11 @@ public class ProductController {
     private void showAddProductForm() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/add_product_form.fxml"));
-            
-            // Création d'une nouvelle instance du contrôleur dédié
             AddProductController addProductController = new AddProductController();
             addProductController.setProductController(this);
-            
             loader.setController(addProductController);
-            Parent root = loader.load();
             
-            // Configuration de la fenêtre modale
+            Parent root = loader.load();
             Stage stage = new Stage();
             stage.setTitle("Ajouter un produit");
             stage.setScene(new Scene(root));
@@ -90,7 +123,34 @@ public class ProductController {
             
         } catch (IOException e) {
             showAlert("Erreur", "Impossible d'ouvrir le formulaire: " + e.getMessage());
-            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void showEditProductForm() {
+        Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
+        if (selectedProduct == null) {
+            showAlert("Erreur", "Veuillez sélectionner un produit");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/edit_product_form.fxml"));
+            Parent root = loader.load();
+            
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            
+            EditProductController controller = loader.getController();
+            controller.initializeData(selectedProduct, this, stage);
+            
+            stage.setTitle("Modifier Produit");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+            
+            refreshTable();
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible d'ouvrir l'éditeur: " + e.getMessage());
         }
     }
 
@@ -121,52 +181,6 @@ public class ProductController {
         }
     }
 
-    public void refreshTable() {
-        loadProducts();
-    }
-
-    public void showAlert(String title, String message) {
-        showAlert(title, message, Alert.AlertType.ERROR);
-    }
-
-    public void showAlert(String title, String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    // Ajoutez cette méthode dans ProductController
-   @FXML
-private void showEditProductForm() {
-    Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
-    if (selectedProduct == null) {
-        showAlert("Erreur", "Veuillez sélectionner un produit");
-        return;
-    }
-
-    try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/edit_product_form.fxml"));
-        Parent root = loader.load();
-        
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        
-        EditProductController controller = loader.getController();
-        controller.initializeData(selectedProduct, this, stage);
-        
-        stage.setTitle("Modifier Produit");
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
-        
-        refreshTable();
-    } catch (IOException e) {
-        showAlert("Erreur", "Impossible d'ouvrir l'éditeur: " + e.getMessage());
-    }
-    }
-    
-// Ajoutez cette méthode pour mettre à jour le produit en base de données
     public boolean updateProductInDatabase(Product product) {
         try (Connection conn = DatabaseConnection.getConnection()) {
             String query = "UPDATE product SET name = ?, description = ?, price = ?, quantity = ?, image_path = ? WHERE id = ?";
@@ -185,110 +199,37 @@ private void showEditProductForm() {
         }
     }
 
+    public void refreshTable() {
+        loadProducts();
+    }
+
     @FXML
     private void handleLogout() {
         try {
-            // Fermer la fenêtre actuelle
             Stage currentStage = (Stage) productTable.getScene().getWindow();
             currentStage.close();
             
-            // Charger la vue de login
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
             Parent root = loader.load();
             
-            // Créer une nouvelle scène
             Stage loginStage = new Stage();
             loginStage.setTitle("Connexion");
             loginStage.setScene(new Scene(root));
             loginStage.show();
-            
         } catch (IOException e) {
             showAlert("Erreur", "Impossible de charger l'écran de connexion: " + e.getMessage());
         }
     }
 
+    public void showAlert(String title, String message) {
+        showAlert(title, message, Alert.AlertType.ERROR);
+    }
 
-    // Déclarez une liste filtrée
-     private FilteredList<Product> filteredProducts;
-     
-     @FXML
-     public void initialize() {
-         // Configuration des colonnes...
-         configureTableColumns();
-         
-         // Initialisation avec la liste complète
-         loadProducts();
-         
-         // Configuration de la recherche
-         setupSearchFunctionality();
-     }
-     
-     private void setupSearchFunctionality() {
-         // Créez une FilteredList wrapper autour de votre ObservableList
-         filteredProducts = new FilteredList<>(productList, p -> true);
-         
-         // Liez la TableView à la FilteredList
-         productTable.setItems(filteredProducts);
-         
-         // Écoutez les changements dans le champ de recherche
-         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-             filterProducts(newValue);
-         });
-     }
-     
-     @FXML
-     private void handleSearch() {
-         filterProducts(searchField.getText());
-     }
-     
-     @FXML
-     private void handleResetSearch() {
-         searchField.clear();
-         filterProducts("");
-     }
-     
-     private void filterProducts(String searchText) {
-         filteredProducts.setPredicate(product -> {
-             // Si le champ de recherche est vide, affichez tous les produits
-             if (searchText == null || searchText.isEmpty()) {
-                 return true;
-             }
-             
-             // Comparez le nom du produit avec le texte de recherche (insensible à la casse)
-             String lowerCaseFilter = searchText.toLowerCase();
-             
-             if (product.getName().toLowerCase().contains(lowerCaseFilter)) {
-                 return true; // Correspondance trouvée
-             }
-             return false; // Aucune correspondance
-         });
-     }
-     
-     public void loadProducts() {
-         productList.clear();
-         try (Connection conn = DatabaseConnection.getConnection()) {
-             String query = "SELECT * FROM product";
-             PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery();
-     
-             while (rs.next()) {
-                 productList.add(new Product(
-                     rs.getInt("id"),
-                     rs.getString("name"),
-                     rs.getString("description"),
-                     rs.getDouble("price"),
-                     rs.getInt("quantity"),
-                     rs.getString("image_path")
-                 ));
-             }
-             
-             // Après le chargement, appliquez le filtre actuel
-             filterProducts(searchField.getText());
-             
-         } catch (Exception e) {
-             showAlert("Erreur", "Erreur lors du chargement des produits: " + e.getMessage());
-         }
-     }
-
-
+    public void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }
