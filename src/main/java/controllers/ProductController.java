@@ -28,9 +28,19 @@ public class ProductController {
     @FXML private TableColumn<Product, Integer> quantityColumn;
     @FXML private TableColumn<Product, String> imageColumn;
     @FXML private TextField searchField;
+    @FXML private Button profileButton;
 
     private ObservableList<Product> productList = FXCollections.observableArrayList();
     private FilteredList<Product> filteredProducts;
+    private String currentUser; // Variable pour stocker le nom de l'utilisateur connecté
+
+    // Méthode pour définir l'utilisateur courant
+    public void setCurrentUser(String username) {
+        this.currentUser = username;
+        if (profileButton != null) {
+            profileButton.setText("Profil (" + username + ")");
+        }
+    }
 
     @FXML
     public void initialize() {
@@ -42,6 +52,11 @@ public class ProductController {
         
         // Chargement des produits
         loadProducts();
+        
+        // Mettre à jour le texte du bouton profil si currentUser est déjà défini
+        if (currentUser != null) {
+            profileButton.setText("Profil (" + currentUser + ")");
+        }
     }
 
     private void configureTableColumns() {
@@ -218,6 +233,25 @@ public class ProductController {
             loginStage.show();
         } catch (IOException e) {
             showAlert("Erreur", "Impossible de charger l'écran de connexion: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleProfile() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/profile_view.fxml"));
+            Parent root = loader.load();
+            
+            ProfileController controller = loader.getController();
+            controller.initializeData(currentUser, (Stage) profileButton.getScene().getWindow());
+            
+            Stage stage = new Stage();
+            stage.setTitle("Profil Administrateur");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible d'ouvrir le profil: " + e.getMessage());
         }
     }
 
