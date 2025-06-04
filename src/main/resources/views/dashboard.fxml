@@ -7,8 +7,9 @@
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ProductController">
     <VBox spacing="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
           AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-        
-         <HBox spacing="10"  alignment="CENTER_RIGHT">
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button fx:id="profileButton"  text="Profile" onAction="#handleProfile" 
+                   style="-fx-background-color: #673AB7; -fx-text-fill: white;"/>
             <Button text="Déconnexion" onAction="#handleLogout" 
                    style="-fx-background-color: #FF5722; -fx-text-fill: white;"/>
         </HBox>
