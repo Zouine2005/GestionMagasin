@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="controllers.ProfileController"
+      spacing="15" >
+    <Label text="Profil Administrateur" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+    
+    <GridPane hgap="10" vgap="15">
+        <Label text="Nom d'utilisateur:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="usernameField" GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false"/>
+        
+        <Label text="Nouveau mot de passe:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <PasswordField fx:id="passwordField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        
+        <Label text="Confirmer mot de passe:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <PasswordField fx:id="confirmPasswordField" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                      onAction="#handleSaveProfile"/> <!-- Entrée déclenche l'enregistrement -->
+    </GridPane>
+    
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Enregistrer" onAction="#handleSaveProfile" 
+               style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"
+               defaultButton="true"/> <!-- Bouton par défaut (déclenché par Entrée) -->
+        <Button text="Annuler" onAction="#handleCancel" 
+               style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+    </HBox>
+</VBox>
