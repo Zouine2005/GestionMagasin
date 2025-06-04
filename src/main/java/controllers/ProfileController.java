@@ -1,10 +1,11 @@
 package controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+import javafx.application.Platform;
 import models.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,34 +22,51 @@ public class ProfileController {
         this.currentUsername = username;
         this.stage = stage;
         usernameField.setText(username);
+        
+        // Focus sur le champ mot de passe à l'ouverture
+        Platform.runLater(() -> passwordField.requestFocus());
     }
 
     @FXML
     private void handleSaveProfile() {
-        String newPassword = passwordField.getText();
-        String confirmedPassword = confirmPasswordField.getText();
+        String newPassword = passwordField.getText().trim();
+        String confirmedPassword = confirmPasswordField.getText().trim();
         
-        if (!newPassword.equals(confirmedPassword)) {
-            showAlert("Erreur", "Les mots de passe ne correspondent pas");
+        // Validation
+        if (newPassword.isEmpty()) {
+            showAlert("Erreur", "Le mot de passe ne peut pas être vide", Alert.AlertType.ERROR);
             return;
         }
         
+        if (!newPassword.equals(confirmedPassword)) {
+            showAlert("Erreur", "Les mots de passe ne correspondent pas", Alert.AlertType.ERROR);
+            return;
+        }
+        
+        if (newPassword.length() < 6) {
+            showAlert("Erreur", "Le mot de passe doit contenir au moins 6 caractères", Alert.AlertType.ERROR);
+            return;
+        }
+        
+        // Mise à jour dans la base de données
         if (updatePasswordInDatabase(newPassword)) {
-            showAlert("Succès", "Mot de passe mis à jour avec succès");
-            stage.close();
+            showAlert("Succès", "Mot de passe mis à jour avec succès", Alert.AlertType.INFORMATION);
+            stage.close(); // Fermer la fenêtre après succès
         }
     }
 
     private boolean updatePasswordInDatabase(String newPassword) {
         try (Connection conn = DatabaseConnection.getConnection()) {
+            // Dans une application réelle, vous devriez HASHER le mot de passe
             String query = "UPDATE admin SET password = ? WHERE username = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, newPassword); // Dans la pratique, vous devriez hasher le mot de passe
+            stmt.setString(1, newPassword);
             stmt.setString(2, currentUsername);
             
-            return stmt.executeUpdate() > 0;
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
         } catch (Exception e) {
-            showAlert("Erreur", "Erreur lors de la mise à jour: " + e.getMessage());
+            showAlert("Erreur", "Échec de la mise à jour: " + e.getMessage(), Alert.AlertType.ERROR);
             return false;
         }
     }
@@ -58,8 +76,9 @@ public class ProfileController {
         stage.close();
     }
     
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.initOwner(stage);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
