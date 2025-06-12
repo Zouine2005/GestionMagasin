@@ -1,31 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.effect.*?>
 
 <VBox xmlns:fx="http://javafx.com/fxml/1" 
       fx:controller="controllers.ProfileController"
-      spacing="15" >
-    <Label text="Profil Administrateur" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-    
-    <GridPane hgap="10" vgap="15">
-        <Label text="Nom d'utilisateur:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="usernameField" GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false"/>
-        
-        <Label text="Nouveau mot de passe:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <PasswordField fx:id="passwordField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-        
-        <Label text="Confirmer mot de passe:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <PasswordField fx:id="confirmPasswordField" GridPane.rowIndex="2" GridPane.columnIndex="1"
-                      onAction="#handleSaveProfile"/> <!-- Entrée déclenche l'enregistrement -->
-    </GridPane>
-    
-    <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Enregistrer" onAction="#handleSaveProfile" 
-               style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"
-               defaultButton="true"/> <!-- Bouton par défaut (déclenché par Entrée) -->
-        <Button text="Annuler" onAction="#handleCancel" 
-               style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+      spacing="25"
+      alignment="CENTER"
+      style="-fx-background-color: linear-gradient(to bottom, #ffffff, #f8fafc); -fx-padding: 30;"
+      prefWidth="500"
+      maxWidth="600">
+
+    <!-- Header Section -->
+    <HBox alignment="CENTER" spacing="10">
+        <Label text="Profil Administrateur" 
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;">
+            <font>
+                <Font name="System Bold" size="24"/>
+            </font>
+            <effect>
+                <DropShadow radius="5" offsetX="2" offsetY="2" color="#d1d5db"/>
+            </effect>
+        </Label>
     </HBox>
+
+    <!-- Profile Form -->
+    <GridPane hgap="20" vgap="20" alignment="CENTER">
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" minWidth="150"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="250"/>
+        </columnConstraints>
+
+        <!-- Username -->
+        <Label text="Nom d'utilisateur :" 
+               style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374151;"
+               GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="usernameField" 
+                   GridPane.rowIndex="0" GridPane.columnIndex="1"
+                   editable="false"
+                   style="-fx-background-color: #f3f4f6; -fx-border-color: #d1d5db; -fx-border-radius: 5; -fx-padding: 8; -fx-font-size: 14px;">
+            <tooltip>
+                <Tooltip text="Le nom d'utilisateur ne peut pas être modifié."/>
+            </tooltip>
+        </TextField>
+
+        <!-- New Password -->
+        <Label text="Nouveau mot de passe :" 
+               style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374151;"
+               GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <PasswordField fx:id="passwordField" 
+                      GridPane.rowIndex="1" GridPane.columnIndex="1"
+                      promptText="6 caractères minimum"
+                      style="-fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 5; -fx-padding: 8; -fx-font-size: 14px;"/>
+
+        <!-- Confirm Password -->
+        <Label text="Confirmer mot de passe :" 
+               style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374151;"
+               GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <PasswordField fx:id="confirmPasswordField" 
+                      GridPane.rowIndex="2" GridPane.columnIndex="1"
+                      promptText="Répétez le mot de passe"
+                      style="-fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 5; -fx-padding: 8; -fx-font-size: 14px;"
+                      onAction="#handleSaveProfile"/>
+    </GridPane>
+
+    <!-- Error/Info Message -->
+    <Label fx:id="infoMessage" 
+           text="" 
+           style="-fx-font-size: 12px; -fx-text-fill: #dc2626; -fx-padding: 5 0 0 0;"
+           visible="false"
+           managed="false"/>
+
+    <!-- Button Section -->
+    <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 20 0 0 0;">
+        <Button text="Enregistrer" 
+                fx:id="saveButton"
+                onAction="#handleSaveProfile" 
+                style="-fx-background-color: #2563eb; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand;"
+                defaultButton="true">
+            <effect>
+                <DropShadow radius="3" offsetX="1" offsetY="1" color="#9ca3af"/>
+            </effect>
+        </Button>
+        <Button text="Annuler" 
+                fx:id="cancelButton"
+                onAction="#handleCancel" 
+                style="-fx-background-color: #f3f4f6; -fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5; -fx-border-color: #d1d5db; -fx-border-width: 1; -fx-cursor: hand;">
+            <effect>
+                <DropShadow radius="3" offsetX="1" offsetY="1" color="#9ca3af"/>
+            </effect>
+        </Button>
+    </HBox>
+
+    <!-- Footer Note -->
+    <Label text="* Les champs marqués d'une étoile (*) sont obligatoires."
+           style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-padding: 15 0 0 0;"/>
+
 </VBox>
