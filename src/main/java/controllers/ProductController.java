@@ -241,20 +241,23 @@ public class ProductController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/profile_view.fxml"));
             Parent root = loader.load();
-            
+    
             ProfileController controller = loader.getController();
             controller.initializeData(currentUser, (Stage) profileButton.getScene().getWindow());
-            
+    
             Stage stage = new Stage();
             stage.setTitle("Profil Administrateur");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
+    
         } catch (IOException e) {
-            showAlert("Erreur", "Impossible d'ouvrir le profil: " + e.getMessage());
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible d'ouvrir le profil : " + e.getMessage());
         }
     }
 
+   
     public void showAlert(String title, String message) {
         showAlert(title, message, Alert.AlertType.ERROR);
     }
