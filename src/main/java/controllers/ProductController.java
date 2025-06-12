@@ -236,26 +236,29 @@ public class ProductController {
         }
     }
 
-    @FXML
-    private void handleProfile() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/profile_view.fxml"));
-            Parent root = loader.load();
+   @FXML
+private void handleProfile() {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/profile_view.fxml"));
+        Parent root = loader.load();
     
-            ProfileController controller = loader.getController();
-            controller.initializeData(currentUser, (Stage) profileButton.getScene().getWindow());
+        Stage profileStage = new Stage();
+        profileStage.setTitle("Profil Administrateur");
+        profileStage.setScene(new Scene(root));
+        profileStage.initModality(Modality.APPLICATION_MODAL);
+        profileStage.initOwner(productTable.getScene().getWindow());
     
-            Stage stage = new Stage();
-            stage.setTitle("Profil Administrateur");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
+        ProfileController controller = loader.getController();
+        
+        // FORCAGE DE LA VALEUR À "admin"
+        controller.initializeData("admin", profileStage);
     
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible d'ouvrir le profil : " + e.getMessage());
-        }
+        profileStage.showAndWait();
+    } catch (IOException e) {
+        e.printStackTrace();
+        showAlert("Erreur", "Impossible d'ouvrir le profil : " + e.getMessage());
     }
+}
 
    
     public void showAlert(String title, String message) {
